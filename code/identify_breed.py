@@ -13,8 +13,8 @@ def find_best_match(dog_breed_sequences, mystery_sequence):
     highest_score = -1
     closest_match = ""
 
-    aligner = Align.PairwiseAligner()
-    aligner.match_score = 1.0 
+# Match and mismatch parameters set to BLAST defaults 
+    aligner = Align.PairwiseAligner(); aligner.match_score, aligner.mismatch_score = 1.0, -2.0
 
     for record in dog_breed_sequences:
         alignments = aligner.align(mystery_sequence.seq, record.seq)
@@ -24,21 +24,21 @@ def find_best_match(dog_breed_sequences, mystery_sequence):
             closest_match = record.description 
     return closest_match, highest_score
     
-#Reading sequences from FASTA files under data folder
+#Reads sequences from FASTA files under data folder
 file_path1 = "data/dog_breeds.fa"
 file_path2 = "data/mystery.fa" 
 
 dog_breed_sequences = read_fasta(file_path1)
 mystery_sequence = read_fasta(file_path2)[0]
 
-#Finding the closest match
+# Finds the closest match
 closest_match, similarity_score = find_best_match(dog_breed_sequences, mystery_sequence)
 
-#Printing the results
+# Prints the results
 print(f"Closest match: {closest_match}")
 print(f"Similarity score: {similarity_score}")
 
-#Saving the output to output.py file in results folder 
+#Saves the output to output.py file in results folder 
 
 
 
