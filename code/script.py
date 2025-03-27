@@ -4,7 +4,9 @@ import numpy as np
 from scipy.stats import norm
 from Bio import Phylo
 import matplotlib.pyplot as plt 
-from Bio.Phylo.TreeConstruction import DistanceMatrix, DistanceTreeConstructor
+from Bio.Align import MultipleSeqAlignment
+from Bio.SeqRecord import SeqRecord
+from Bio.Phylo.TreeConstruction import DistanceTreeConstructor, DistanceCalculator
 
 #Function reads sequences from a FASTA file
 def read_fasta(file_path):
@@ -77,4 +79,59 @@ def calculate_p_value(highest_score, all_scores):
 
 p_value = calculate_p_value(highest_score, all_scores)
 print(f"P-value for closest match: {p_value}")
+
+
+def breed_name_tag(description):
+ 
+    if "[breed=" in description:
+        return description.split("[breed=")[1].split("]")[0]
+    elif "breed " in description:
+        return description.split("breed ")[-1].split()[0]
+    return "Mystery Sequence"
+
+ 
+breed_clusters = {}
+for record in dog_breed_sequences:
+    breed = breed_name_tag(record.description)
+    if breed not in breed_clusters:
+        breed_clusters[breed] = []
+    breed_clusters[breed].append(record)
+
+clustered_sequences = []
+for breed, sequences in breed_clusters.items():
+    breed_ref_seq = sequences[0]
+    clustered_sequences.append(breed_ref_seq)
+
+clustered_sequences.append(mystery_sequence)
+
+def build_phylogenetic_tree(clustered_sequences):
+ 
+    alignment = MultipleSeqAlignment([
+        SeqRecord(seq=record.seq, id=breed_name_tag(record.description))
+        for record in clustered_sequences
+    ])
+
+    calculator = DistanceCalculator("identity")
+    distance_matrix = calculator.get_distance(alignment)
+
+    tree_constructor = DistanceTreeConstructor()
+    tree = tree_constructor.nj(distance_matrix)
+
+    return tree
+
+tree = build_phylogenetic_tree(clustered_sequences)
+
+ 
+fig, ax = plt.subplots(figsize=(5, 5))
+plt.title("Phylogenetic Tree of Dog Breeds", fontsize=8)
+
+def edited_label_func(clade):
+    return clade.name if clade.is_terminal() else ""
+
+Phylo.draw(tree, do_show=False, axes=ax, label_func=edited_label_func)
+
+for text in ax.texts:
+    text.set_fontsize(7) 
+plt.savefig("results/tree.png", format="png")
+plt.show()
 
