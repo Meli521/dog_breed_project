@@ -1,5 +1,7 @@
 Project: Dog Breed Identification 
 
+GitHub Repository: https://github.com/Meli521/dog_breed_project.git
+
 This project aims to identify a dog's breed based on an unknown DNA sequence. The process involves:
 
 1. Comparing the unknown sequence (mystery.fa) against a database of known dog breed sequences (dog_breeds.fa)
@@ -8,7 +10,7 @@ This project aims to identify a dog's breed based on an unknown DNA sequence. Th
 
 3. Constructing a phylogenetic tree to visualise evolutionary relationships
 
-The project is organised ias such: 
+The project is organised as such: 
 
 Dog_breed_project
 Data -> contains dog_breeds.fa (list of sequences) and mystery.fa (unknown sequence)
@@ -23,9 +25,19 @@ Arguments:
 - mystery.fa: file containing the unknown sequence 
 - dog_breeds.fa: file containing the known dog breed DNA sequences 
 
+Example input: 
 
 Example Output: 
 
 - Closest match: 
 - P-value: 
 - Phylogenetic tree 
+
+Instructions:
+
+External libraries used:
+- NumPy
+- BioPython
+- pytest
+- Matplotlib
+- SciPy 
