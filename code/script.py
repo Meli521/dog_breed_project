@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from Bio.Align import MultipleSeqAlignment
 from Bio.SeqRecord import SeqRecord
 from Bio.Phylo.TreeConstruction import DistanceTreeConstructor, DistanceCalculator
+ 
 
 # Function to read sequences from a FASTA file
 def read_fasta(file_path: str):
@@ -91,8 +92,6 @@ def breed_name_tag(description: str) -> str:
     """
     if "[breed=" in description:
         return description.split("[breed=")[1].split("]")[0]
-    elif "breed " in description:
-        return description.split("breed ")[-1].split()[0]
     return "Mystery Sequence"
 
 # Function to build a phylogenetic tree 
@@ -129,23 +128,19 @@ def main():
     # Find the closest match
     closest_match, closest_sequence, highest_score, all_scores = find_best_match(dog_breed_sequences, mystery_sequence)
 
-    # Print and save the closest match to output.txt file in results folder 
-    output = f"Closest match: {closest_match}\nSequence: {closest_sequence}\nSimilarity score: {highest_score}\n"
+    # Print and save the closest match and p-value to output.txt file in results folder 
+    output = (
+        f"Closest match: {closest_match}\n"
+        f"Sequence: {closest_sequence}\n"
+        f"Similarity score: {highest_score}\n"
+        f"P-value: {calculate_p_value(highest_score, all_scores)}\n"
+    )    
     print(output)
-    
-    # Save the result to output.txt
+
     with open("results/Output.txt", "w") as f:
         f.write(output)
-    print(f"Closest match saved to: results/Output.txt")
+    print("Results saved to: results/Output.txt")    
 
-    # Calculate p-value
-    p_value = calculate_p_value(highest_score, all_scores)
-    print(f"P-value for closest match: {p_value}")
-    
-    # Save p-value to output.txt
-    with open("results/Output.txt", "a") as f:
-        f.write(f"P-value: {p_value}\n")
-    print(f"P-value saved to: results/Output.txt")
 
     # Group sequences by breed 
     breed_clusters = {}
