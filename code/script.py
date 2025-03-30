@@ -40,6 +40,13 @@ def find_best_match(dog_breed_sequences, mystery_sequence) -> tuple[str, str, fl
     Returns: 
     Tuple with: description of closest matching breed, sequence of closest match, highest alignment score, list of all alignment scores 
     """
+
+    if not dog_breed_sequences:
+        raise ValueError("The dog breed sequence file is empty. No alignment performed")
+    
+    if not mystery_sequence or not mystery_sequence.seq:
+        raise ValueError("The mystery sequence file is empty. No alignment performed")
+    
     highest_score = -1
     closest_match = ""
     closest_sequence = "" # Stores sequence of the closest match 
